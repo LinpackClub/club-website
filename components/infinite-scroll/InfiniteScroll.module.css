@@ -1,0 +1,183 @@
+.wrapper {
+  width: 100%;
+  max-width: 1536px;
+  margin: 2rem auto;
+  position: relative;
+  height: 120px; /* Return to original height */
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
+}
+
+.track {
+  display: flex;
+  width: fit-content;
+  animation: scroll 40s linear infinite;
+}
+
+/* Image container styles */
+.imageContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.itemImage {
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.item:hover .itemImage {
+  transform: scale(1.1);
+}
+
+/* Only pause on hover for desktop devices */
+@media (hover: hover) and (pointer: fine) {
+  .track:hover {
+    animation-play-state: paused;
+  }
+}
+
+/* Class to ensure continuous scrolling on mobile */
+.noInterrupt {
+  animation-play-state: running !important;
+  pointer-events: none !important;
+  touch-action: none !important;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.3333%);
+  }
+}
+
+.item {
+  min-width: 200px;
+  height: 100px; /* Return to original height */
+  margin-right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Center the image */
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+  box-shadow: none;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, 
+    rgba(255,255,255,0.1) 0%,
+    rgba(255,255,255,0.05) 100%
+  );
+  overflow: hidden; /* Keep to contain image */
+  padding: 0; /* Remove padding */
+}
+
+/* Light mode specific styles */
+.item {
+  background: linear-gradient(135deg, 
+    rgba(255,255,255,0.9) 0%,
+    rgba(255,255,255,0.8) 100%
+  );
+  color: #1f2937; /* gray-800 */
+  box-shadow: none;
+}
+
+/* Dark mode specific styles - Darker muted gray background */
+.dark .item {
+  background: #1c1c1c; /* Even darker muted gray */
+  color: #f9fafb; /* gray-50 */
+  box-shadow: none;
+}
+
+/* Different accent colors for each item in light mode */
+.item:nth-child(16n+1) { 
+  background: linear-gradient(135deg, 
+    #fef2f2 0%,
+    #fee2e2 100%
+  );
+}
+.item:nth-child(16n+2) { 
+  background: linear-gradient(135deg, 
+    #eff6ff 0%,
+    #dbeafe 100%
+  );
+}
+.item:nth-child(16n+3) { 
+  background: linear-gradient(135deg, 
+    #f0fdf4 0%,
+    #dcfce7 100%
+  );
+}
+.item:nth-child(16n+4) { 
+  background: linear-gradient(135deg, 
+    #fefce8 0%,
+    #fef9c3 100%
+  );
+}
+.item:nth-child(16n+5) { 
+  background: linear-gradient(135deg, 
+    #f5f3ff 0%,
+    #ede9fe 100%
+  );
+}
+.item:nth-child(16n+6) { 
+  background: linear-gradient(135deg, 
+    #fdf2f8 0%,
+    #fce7f3 100%
+  );
+}
+.item:nth-child(16n+7) { 
+  background: linear-gradient(135deg, 
+    #f0f4ff 0%,
+    #e0e7ff 100%
+  );
+}
+.item:nth-child(16n+8) { 
+  background: linear-gradient(135deg, 
+    #ecfdf5 0%,
+    #d1fae5 100%
+  );
+}
+
+/* Different accent colors for each item in dark mode - Using even darker muted grays with slight color tint */
+.dark .item:nth-child(16n+1) { 
+  background: #241c1c; /* Even darker muted gray with red tint */
+  color: #fecaca; /* red-200 */
+}
+.dark .item:nth-child(16n+2) { 
+  background: #1c1e24; /* Even darker muted gray with blue tint */
+  color: #bfdbfe; /* blue-200 */
+}
+.dark .item:nth-child(16n+3) { 
+  background: #1c2420; /* Even darker muted gray with green tint */
+  color: #6ee7b7; /* emerald-200 */
+}
+.dark .item:nth-child(16n+4) { 
+  background: #24211c; /* Even darker muted gray with amber tint */
+  color: #fde68a; /* amber-200 */
+}
+.dark .item:nth-child(16n+5) { 
+  background: #201c24; /* Even darker muted gray with purple tint */
+  color: #c4b5fd; /* purple-200 */
+}
+.dark .item:nth-child(16n+6) { 
+  background: #241c21; /* Even darker muted gray with pink tint */
+  color: #f9a8d4; /* pink-200 */
+}
+.dark .item:nth-child(16n+7) { 
+  background: #1d1c24; /* Even darker muted gray with indigo tint */
+  color: #a5b4fc; /* indigo-200 */
+}
+.dark .item:nth-child(16n+8) { 
+  background: #1c2421; /* Even darker muted gray with teal tint */
+  color: #5eead4; /* teal-200 */
+}

@@ -1,7 +1,6 @@
-
 'use client';
 import Image from "next/image";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from '@studio-freight/lenis';
@@ -29,6 +28,7 @@ export default function Hero() {
 
   const [currentImage, setCurrentImage] = useState(0);
   const [hasScrolled, setHasScrolled] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   // Refs for GSAP animations
   const heroRef = useRef<HTMLDivElement>(null);
@@ -40,16 +40,75 @@ export default function Hero() {
   const overlayRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
+  const animationInitialized = useRef(false);
+  const lenisRef = useRef<any>(null);
+  const imageTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const scrollTriggerRef = useRef<any>(null);
 
+  // Initialize client-side only features
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Clear timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (imageTimerRef.current) {
+        clearInterval(imageTimerRef.current);
+      }
+      // Clean up ScrollTrigger
+      if (scrollTriggerRef.current) {
+        scrollTriggerRef.current.kill();
+      }
+      // Clean up all ScrollTriggers
+      ScrollTrigger.getAll().forEach(st => st.kill());
+      // Clean up Lenis
+      if (lenisRef.current) {
+        lenisRef.current.destroy();
+      }
+    };
+  }, []);
+
+  // Initialize animations only once
+  const initializeAnimations = useCallback(() => {
+    if (animationInitialized.current || !isClient || !heroRef.current) return;
+    animationInitialized.current = true;
+
+    // Ensure GSAP plugins are registered
+    if (typeof window !== 'undefined') {
+      gsap.registerPlugin(ScrollTrigger);
+    }
+
     // Initialize Lenis smooth scroll
     const lenis = new Lenis({
       duration: 1.6,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      // Add syncTouch to work better with ScrollTrigger
+      syncTouch: true,
+    });
+    lenisRef.current = lenis;
+
+    // Sync ScrollTrigger with Lenis
+    lenis.on('scroll', ScrollTrigger.update);
+    
+    // Tell ScrollTrigger to use Lenis as the scroller
+    ScrollTrigger.scrollerProxy(document.documentElement, {
+      scrollTop: (value?: number) => {
+        if (arguments.length && value !== undefined) {
+          lenis.scrollTo(value as number);
+          return value as number;
+        }
+        return lenis.scroll;
+      },
+      getBoundingClientRect() {
+        return {top: 0, left: 0, width: window.innerWidth, height: window.innerHeight};
+      },
+      pinType: document.documentElement.style.transform ? "transform" : "fixed"
     });
 
     function raf(time: number) {
       lenis.raf(time);
+      ScrollTrigger.update(); // Update ScrollTrigger on each frame
       requestAnimationFrame(raf);
     }
     requestAnimationFrame(raf);
@@ -61,8 +120,8 @@ export default function Hero() {
       }
     });
 
-    // GSAP Timeline for entrance animations
-    const tl = gsap.timeline({ delay: 0.5 });
+    // GSAP Timeline for entrance animations - with reduced initial delay for better UX
+    const tl = gsap.timeline({ delay: 0.1 }); // Reduced delay from 0.5 to 0.1
 
     // Set initial states
     gsap.set([badgeRef.current, mainTitleRef.current, subtitleRef.current, statsRef.current, ctaRef.current], {
@@ -84,93 +143,131 @@ export default function Hero() {
     tl.to(imageRef.current, {
       opacity: 1,
       scale: 1,
-      duration: 2,
+      duration: 1.5, // Reduced from 2
       ease: "power3.out"
     })
     .to(overlayRef.current, {
       opacity: 1,
-      duration: 1.5,
+      duration: 1, // Reduced from 1.5
       ease: "power2.out"
-    }, "-=1.5")
+    }, "-=1")
     .to(badgeRef.current, {
       opacity: 1,
       y: 0,
       clipPath: 'inset(0% 0 0 0)',
-      duration: 1,
+      duration: 0.8, // Reduced from 1
       ease: "power3.out"
-    }, "-=1")
+    }, "-=0.7")
     .to(mainTitleRef.current, {
       opacity: 1,
       y: 0,
       clipPath: 'inset(0% 0 0 0)',
-      duration: 1.2,
+      duration: 0.9, // Reduced from 1.2
       ease: "power3.out"
-    }, "-=0.8")
+    }, "-=0.6")
     .to(subtitleRef.current, {
       opacity: 1,
       y: 0,
       clipPath: 'inset(0% 0 0 0)',
-      duration: 1,
+      duration: 0.8, // Reduced from 1
       ease: "power3.out"
-    }, "-=0.9")
+    }, "-=0.7")
     .to(statsRef.current, {
       opacity: 1,
       y: 0,
       clipPath: 'inset(0% 0 0 0)',
-      duration: 1,
+      duration: 0.8, // Reduced from 1
       ease: "power3.out"
-    }, "-=0.8")
+    }, "-=0.6")
     .to(ctaRef.current, {
       opacity: 1,
       y: 0,
       clipPath: 'inset(0% 0 0 0)',
-      duration: 1,
+      duration: 0.8, // Reduced from 1
       ease: "power3.out"
-    }, "-=0.8");
+    }, "-=0.6");
 
     // Scroll-triggered zoom effect for magazine-style transition
-    const imageZoomTrigger = ScrollTrigger.create({
-      trigger: heroRef.current,
-      start: "top top",
-      end: "bottom top",
-      scrub: 1.5,
-      onUpdate: (self) => {
-        const progress = self.progress;
-        const scale = 1 + (progress * 0.8); // Zoom from 1 to 1.8x
-        const brightness = 1 - (progress * 0.3); // Darken as it zooms
-        
-        gsap.set(imageRef.current, {
-          scale: scale,
-          filter: `brightness(${brightness})`
+    // Add a small delay to ensure DOM is ready
+    setTimeout(() => {
+      if (heroRef.current) {
+        scrollTriggerRef.current = ScrollTrigger.create({
+          trigger: heroRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1.5,
+          // Use document.scrollingElement for proper Lenis integration
+          scroller: document.documentElement,
+          onUpdate: (self) => {
+            if (!imageRef.current || !mainTitleRef.current || !subtitleRef.current || 
+                !badgeRef.current || !statsRef.current || !ctaRef.current) return;
+                
+            const progress = self.progress;
+            const scale = 1 + (progress * 0.8); // Zoom from 1 to 1.8x
+            const brightness = 1 - (progress * 0.3); // Darken as it zooms
+            
+            gsap.set(imageRef.current, {
+              scale: scale,
+              filter: `brightness(${brightness})`
+            });
+            
+            // Parallax text movement
+            gsap.set([mainTitleRef.current, subtitleRef.current], {
+              y: -progress * 100,
+              opacity: 1 - (progress * 1.2)
+            });
+            
+            gsap.set([badgeRef.current, statsRef.current, ctaRef.current], {
+              y: -progress * 60,
+              opacity: 1 - (progress * 1.5)
+            });
+          }
         });
         
-        // Parallax text movement
-        gsap.set([mainTitleRef.current, subtitleRef.current], {
-          y: -progress * 100,
-          opacity: 1 - (progress * 1.2)
-        });
-        
-        gsap.set([badgeRef.current, statsRef.current, ctaRef.current], {
-          y: -progress * 60,
-          opacity: 1 - (progress * 1.5)
-        });
+        // Refresh ScrollTrigger after creation
+        ScrollTrigger.refresh();
       }
-    });
+    }, 100); // Small delay to ensure DOM elements are ready
 
+    // Image rotation effect - start only after initial animation completes
+    setTimeout(() => {
+      if (imageTimerRef.current) {
+        clearInterval(imageTimerRef.current);
+      }
+      imageTimerRef.current = setInterval(() => {
+        setCurrentImage((prev) => (prev + 1) % images.length);
+      }, 6000);
+    }, 2000); // Start rotation after 2 seconds
 
+  }, [isClient, hasScrolled, images.length]);
 
-    // Image rotation effect
-    const imageTimer = setInterval(() => {
-      setCurrentImage((prev) => (prev + 1) % images.length);
-    }, 6000);
+  // Initialize animations when client is ready
+  useEffect(() => {
+    if (isClient && heroRef.current) {
+      // Use requestAnimationFrame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        initializeAnimations();
+      });
+    }
+    
+    // Refresh ScrollTrigger when component mounts
+    if (isClient) {
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 500);
+    }
+  }, [isClient, initializeAnimations]);
 
-    // Cleanup
-    return () => {
-      clearInterval(imageTimer);
-      lenis.destroy();
-      ScrollTrigger.getAll().forEach(st => st.kill());
-    };
-  }, [hasScrolled, images.length]);
+  // Prevent rendering until client-side is ready
+  if (!isClient) {
+    return (
+      <section 
+        className="relative h-screen w-full overflow-hidden bg-gray-50 dark:bg-gray-900 z-0"
+      >
+        <div className="absolute inset-0 w-full h-full bg-gray-200 animate-pulse" />
+      </section>
+    );
+  }
 
   return (
     <section 
@@ -185,7 +282,7 @@ export default function Hero() {
         {images.map((image, index) => (
           <div
             key={image.src}
-            className={`absolute inset-0 transition-opacity duration-2000 ${
+            className={`absolute inset-0 transition-opacity duration-1000 ${
               currentImage === index ? "opacity-100" : "opacity-0"
             }`}
           >
@@ -280,8 +377,6 @@ export default function Hero() {
           </div>
         </div>
       </div>
-
-
 
       {/* Corner accents */}
       <div className="absolute top-8 left-8 w-16 h-16 border-l-2 border-t-2 border-white/20" />
