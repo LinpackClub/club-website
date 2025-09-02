@@ -324,7 +324,7 @@ export default function Hero() {
         <div ref={mainTitleRef} className="mb-8">
           <h1 className="text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-light leading-[0.9] tracking-tight text-white">
             <span className="block md:inline font-extralight">We make </span>
-            <span className="block md:inline font-bold bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent">
+            <span className="block md:inline font-bold bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent dark:bg-gradient-to-r dark:from-red-400 dark:via-red-500 dark:to-red-600">
               Creative
             </span>
           </h1>
@@ -364,12 +364,12 @@ export default function Hero() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
               href="https://forms.gle/KxZrPb5P1ySvwFQs7"
-              className="group relative px-12 py-4 bg-red-600 hover:bg-red-700 text-white font-medium rounded-full transition-all duration-300 transform hover:scale-105 shadow-2xl"
+              className="group relative px-12 py-4 bg-gradient-to-r from-red-500 to-red-600 hover:bg-gradient-to-r hover:from-red-600 hover:to-red-700 text-white font-medium rounded-full transition-all duration-300 transform hover:scale-105 shadow-2xl dark:from-red-600 dark:to-red-700 dark:hover:from-red-700 dark:hover:to-red-800"
               target="_blank"
               rel="noopener noreferrer"
             >
               <span className="relative z-10">Join Our Community</span>
-              <div className="absolute inset-0 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-red-600 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 dark:from-red-600 dark:to-red-700" />
             </a>
             <div className="text-white/60 text-sm uppercase tracking-widest">
               Technical Excellence

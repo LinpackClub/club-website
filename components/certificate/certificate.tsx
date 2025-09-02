@@ -1,7 +1,15 @@
 "use client";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
+import Lenis from '@studio-freight/lenis';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// Register GSAP plugins
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 // API Status Component
 function ApiStatusIndicator({ isOnline }: { isOnline: boolean }) {
@@ -139,7 +147,7 @@ function ConfirmationModal({
             transition={{ delay: 0.2 }}
             className="text-2xl font-extralight text-gray-900 dark:text-white mb-2"
           >
-            Certificate Generated <span className="font-semibold bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent">Successfully!</span>
+            Certificate Generated <span className="font-semibold bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent dark:bg-gradient-to-r dark:from-red-400 dark:via-red-500 dark:to-red-600">Successfully!</span>
           </motion.h3>
           <motion.p 
             initial={{ opacity: 0, y: 10 }}
@@ -176,6 +184,86 @@ export default function CertificateForm() {
   const [status, setStatus] = useState("");
   const [isApiOnline, setIsApiOnline] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+  const lenisRef = useRef<any>(null);
+  const animationInitialized = useRef(false);
+
+  // Initialize client-side only features
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Clear timeouts on unmount
+  useEffect(() => {
+    return () => {
+      // Clean up Lenis
+      if (lenisRef.current) {
+        lenisRef.current.destroy();
+      }
+      // Clean up all ScrollTriggers
+      ScrollTrigger.getAll().forEach(st => st.kill());
+    };
+  }, []);
+
+  // Initialize animations only once
+  const initializeAnimations = useCallback(() => {
+    if (animationInitialized.current || !isClient) return;
+    animationInitialized.current = true;
+
+    // Ensure GSAP plugins are registered
+    if (typeof window !== 'undefined') {
+      gsap.registerPlugin(ScrollTrigger);
+    }
+
+    // Initialize Lenis smooth scroll
+    const lenis = new Lenis({
+      duration: 1.6,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      // Add syncTouch to work better with ScrollTrigger
+      syncTouch: true,
+    });
+    lenisRef.current = lenis;
+
+    // Sync ScrollTrigger with Lenis
+    lenis.on('scroll', ScrollTrigger.update);
+    
+    // Tell ScrollTrigger to use Lenis as the scroller
+    ScrollTrigger.scrollerProxy(document.documentElement, {
+      scrollTop: (value?: number) => {
+        if (arguments.length && value !== undefined) {
+          lenis.scrollTo(value as number);
+          return value as number;
+        }
+        return lenis.scroll;
+      },
+      getBoundingClientRect() {
+        return {top: 0, left: 0, width: window.innerWidth, height: window.innerHeight};
+      },
+      pinType: document.documentElement.style.transform ? "transform" : "fixed"
+    });
+
+    function raf(time: number) {
+      lenis.raf(time);
+      ScrollTrigger.update(); // Update ScrollTrigger on each frame
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // Refresh ScrollTrigger after creation
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 100);
+  }, [isClient]);
+
+  // Initialize animations when client is ready
+  useEffect(() => {
+    if (isClient) {
+      // Use requestAnimationFrame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        initializeAnimations();
+      });
+    }
+  }, [isClient, initializeAnimations]);
 
   // API status check effect
   useEffect(() => {
@@ -256,6 +344,15 @@ export default function CertificateForm() {
     }
   };
 
+  // Prevent rendering until client-side is ready
+  if (!isClient) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-black dark:to-black">
+        <div className="h-16"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-black dark:to-black">
       <StatusIndicator status={status} error={error} isLoading={isLoading} />
@@ -308,7 +405,7 @@ export default function CertificateForm() {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="text-4xl sm:text-5xl md:text-6xl font-extralight tracking-[-0.02em] text-white mb-6 leading-[0.9] font-serif max-w-4xl drop-shadow-xl"
               >
-                Event <span className="font-bold bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent">Registration</span>
+                Event <span className="font-bold bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent dark:bg-gradient-to-r dark:from-red-400 dark:via-red-500 dark:to-red-600">Registration</span>
               </motion.h1>
               
               <motion.p 
@@ -391,7 +488,7 @@ export default function CertificateForm() {
           >
             <div className="bg-white/80 dark:bg-black/80 backdrop-blur-xl shadow-2xl rounded-3xl p-6 sm:p-8 border border-white/50 dark:border-gray-800">
               <h2 className="text-2xl sm:text-3xl font-extralight text-gray-800 dark:text-white mb-6">
-                Certificate <span className="font-semibold bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent">Details</span>
+                Certificate <span className="font-semibold bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent dark:bg-gradient-to-r dark:from-red-400 dark:via-red-500 dark:to-red-600">Details</span>
               </h2>
               <form
                 onSubmit={generatecertificate}

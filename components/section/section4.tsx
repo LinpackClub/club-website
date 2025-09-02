@@ -169,7 +169,7 @@ export default function Section4() {
 
           {/* Main heading with magazine-style typography */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extralight tracking-[-0.02em] text-black dark:text-white mb-6 leading-[0.9] font-serif max-w-5xl mx-auto">
-            What Our <span className="font-thin italic bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent">
+            What Our <span className="font-thin italic bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent dark:bg-gradient-to-r dark:from-red-400 dark:via-red-500 dark:to-red-600">
               {typedText}
               {isTyping && <span className="animate-pulse">|</span>}
             </span>
@@ -450,7 +450,7 @@ export default function Section4() {
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center px-4 py-2 lg:px-10 lg:py-5 bg-white/90 hover:bg-white text-black font-medium rounded-full transition-all duration-300 shadow-2xl hover:shadow-3xl backdrop-blur-sm border border-white/20"
+                className="inline-flex items-center px-4 py-2 lg:px-10 lg:py-5 bg-gradient-to-r from-red-500 to-red-600 hover:bg-white text-white font-medium rounded-full transition-all duration-300 shadow-2xl hover:shadow-3xl hover:text-black backdrop-blur-sm border border-red-600 dark:from-red-600 dark:to-red-700 dark:hover:from-red-700 dark:hover:to-red-800 dark:text-white dark:border-red-700"
               >
                 <span className="text-sm lg:text-lg font-semibold">Become a Member</span>
                 <svg className="ml-2 w-4 h-4 lg:ml-3 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

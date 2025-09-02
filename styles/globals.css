@@ -6,6 +6,19 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --one-block-size: calc(100vw / 30);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --one-block-size: calc(100vw / 15);
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1025px) {
+  :root {
+    --one-block-size: calc(100vw / 22);
+  }
 }
 
 @layer utilities {

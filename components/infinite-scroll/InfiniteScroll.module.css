@@ -1,9 +1,9 @@
 .wrapper {
   width: 100%;
   max-width: 1536px;
-  margin: 2rem auto;
+  margin: 0 auto;
   position: relative;
-  height: 120px; /* Return to original height */
+  height: 180px;
   overflow: hidden;
   mask-image: linear-gradient(
     to right,
@@ -12,29 +12,104 @@
     black 90%,
     transparent
   );
+  padding: 0;
+  /* Reset all default browser styles */
+  -webkit-margin-before: 0;
+  -webkit-margin-after: 0;
+  -webkit-margin-start: 0;
+  -webkit-margin-end: 0;
+  -webkit-padding-start: 0;
+  /* Ensure no outline or border */
+  border: none;
+  outline: none;
+  /* Ensure it takes full width without gaps */
+  box-sizing: border-box;
 }
 
 .track {
   display: flex;
   width: fit-content;
   animation: scroll 40s linear infinite;
+  padding: 0;
+  margin: 0;
+  will-change: transform;
+  /* Ensure no gaps between flex items */
+  gap: 0;
+  align-items: stretch;
+  /* Reset all default browser styles */
+  -webkit-margin-before: 0;
+  -webkit-margin-after: 0;
+  -webkit-margin-start: 0;
+  -webkit-margin-end: 0;
+  -webkit-padding-start: 0;
+  /* Ensure no outline or border */
+  border: none;
+  outline: none;
+  /* Ensure it takes full height without gaps */
+  box-sizing: border-box;
+  /* Ensure items are flush with container */
+  align-content: stretch;
+  /* Remove any potential whitespace */
+  font-size: 0;
+  line-height: 0;
 }
 
-/* Image container styles */
-.imageContainer {
-  position: relative;
-  width: 100%;
-  height: 100%;
+.item {
+  min-width: 300px;
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+  box-shadow: none;
+  flex-shrink: 0;
+  background: transparent;
   overflow: hidden;
+  padding: 0;
+  margin: 0;
+  border: none;
+  /* Ensure no default browser styles affect the item */
+  -webkit-margin-before: 0;
+  -webkit-margin-after: 0;
+  -webkit-margin-start: 0;
+  -webkit-margin-end: 0;
+  /* Ensure items are flush with each other */
+  align-self: stretch;
+  /* Remove any potential whitespace */
+  font-size: 0;
+  line-height: 0;
 }
 
 .itemImage {
-  object-fit: cover;
+  object-fit: contain;
   transition: transform 0.3s ease;
+  transform: scale(0.8);
+  padding: 0;
+  margin: 0;
+  border: none;
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* Reset all default browser styles */
+  -webkit-margin-before: 0;
+  -webkit-margin-after: 0;
+  -webkit-margin-start: 0;
+  -webkit-margin-end: 0;
+  -webkit-padding-start: 0;
+  /* Ensure no outline */
+  outline: none;
+  /* Ensure it takes full space without gaps */
+  box-sizing: border-box;
+  /* Remove any potential whitespace */
+  font-size: 0;
+  line-height: 0;
 }
 
 .item:hover .itemImage {
-  transform: scale(1.1);
+  transform: scale(0.9);
 }
 
 /* Only pause on hover for desktop devices */
@@ -60,40 +135,16 @@
   }
 }
 
-.item {
-  min-width: 200px;
-  height: 100px; /* Return to original height */
-  margin-right: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center; /* Center the image */
-  color: white;
-  font-weight: bold;
-  font-size: 1.1rem;
-  box-shadow: none;
-  flex-shrink: 0;
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,0.1) 0%,
-    rgba(255,255,255,0.05) 100%
-  );
-  overflow: hidden; /* Keep to contain image */
-  padding: 0; /* Remove padding */
-}
-
 /* Light mode specific styles */
 .item {
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,0.9) 0%,
-    rgba(255,255,255,0.8) 100%
-  );
+  background: transparent;
   color: #1f2937; /* gray-800 */
   box-shadow: none;
 }
 
 /* Dark mode specific styles - Darker muted gray background */
 .dark .item {
-  background: #1c1c1c; /* Even darker muted gray */
+  background: transparent;
   color: #f9fafb; /* gray-50 */
   box-shadow: none;
 }

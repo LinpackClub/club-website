@@ -40,6 +40,26 @@ body::-webkit-scrollbar {
   display: none;
 }
 
+/* Make text white in dark mode */
+.dark {
+  color: white;
+}
+
+.dark body {
+  color: white;
+}
+
+/* Ensure all text elements are white in dark mode */
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6,
+.dark p, .dark div, .dark a, .dark li, .dark td, .dark th {
+  color: white;
+}
+
+/* Exception for gradient text elements - keep them transparent to show gradient */
+.dark .bg-clip-text.text-transparent {
+  color: transparent;
+}
+
 body {
   .swiper {
     width: 300px;

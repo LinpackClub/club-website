@@ -153,7 +153,7 @@ export default function MagazineResearchSection() {
           {/* Main heading with responsive typography and typing effect */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extralight tracking-[-0.02em] text-black dark:text-white mb-6 leading-[0.9] font-serif max-w-5xl mx-auto">
             Latest Research
-            <span className="block font-thin italic bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent text-3xl md:text-4xl lg:text-5xl xl:text-6xl mt-2 tracking-[-0.01em]">
+            <span className="block font-thin italic bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent text-3xl md:text-4xl lg:text-5xl xl:text-6xl mt-2 tracking-[-0.01em] dark:bg-gradient-to-r dark:from-red-400 dark:via-red-500 dark:to-red-600">
               {typedText}
               {isTyping && <span className="animate-pulse">|</span>}
             </span>
@@ -243,7 +243,7 @@ export default function MagazineResearchSection() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, ease: "easeOut", delay: 0.3 }}
                     viewport={{ once: true }}
-                    className="group inline-flex items-center gap-2 lg:gap-4 px-4 py-2 lg:px-10 lg:py-5 bg-white/95 backdrop-blur-sm text-black font-medium tracking-[0.1em] uppercase text-xs lg:text-sm border-2 border-white hover:bg-gradient-to-r hover:from-red-400 hover:via-red-500 hover:to-red-600 hover:text-white hover:border-red-500 transition-all duration-500 shadow-2xl rounded-full"
+                    className="group inline-flex items-center gap-2 lg:gap-4 px-4 py-2 lg:px-10 lg:py-5 bg-white/95 backdrop-blur-sm text-black font-medium tracking-[0.1em] uppercase text-xs lg:text-sm border-2 border-white hover:bg-gradient-to-r hover:from-red-400 hover:via-red-500 hover:to-red-600 hover:text-white hover:border-red-500 transition-all duration-500 shadow-2xl rounded-full dark:bg-gradient-to-r dark:from-red-500 dark:via-red-600 dark:to-red-700 dark:text-white dark:border-red-600"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -263,7 +263,7 @@ export default function MagazineResearchSection() {
                   <div className="relative">
                     {/* Large number indicator */}
                     <div className="w-32 h-32 border border-white/20 bg-white/5 backdrop-blur-sm flex items-center justify-center transition-all duration-500 hover:border-white/40 hover:bg-white/10">
-                      <span className="bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent text-4xl font-semibold tracking-wider font-mono">
+                      <span className="bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent text-4xl font-semibold tracking-wider font-mono dark:bg-gradient-to-r dark:from-red-400 dark:via-red-500 dark:to-red-600">
                         {String(index + 1).padStart(2, '0')}
                       </span>
                     </div>

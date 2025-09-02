@@ -152,7 +152,7 @@ export default function MagazineContactSection() {
             {/* Reduced main heading with responsive typography */}
             <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extralight tracking-[-0.02em] text-black dark:text-white mb-4 leading-[0.9] font-serif max-w-5xl mx-auto">
               <span className="block lg:inline">Let&apos;s Start a </span>
-              <span className="block lg:inline font-thin italic bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent text-3xl md:text-4xl lg:text-5xl xl:text-6xl mt-2 lg:mt-0 tracking-[-0.01em]">
+              <span className="block lg:inline font-thin italic bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent text-3xl md:text-4xl lg:text-5xl xl:text-6xl mt-2 lg:mt-0 tracking-[-0.01em] dark:bg-gradient-to-r dark:from-red-400 dark:via-red-500 dark:to-red-600">
                 {typedText}
                 {isTyping && <span className="animate-pulse">|</span>}
               </span>
@@ -174,7 +174,7 @@ export default function MagazineContactSection() {
                   Connect With Us
                 </h2>
                 <p className="text-base md:text-lg text-gray-600 dark:text-gray-400 font-extralight leading-relaxed hidden md:block tracking-wide max-w-lg">
-                  We&apos;re always excited to collaborate on innovative projects and discuss <span className="font-semibold bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent underline decoration-red-500 decoration-2 underline-offset-2">mathematical research opportunities.</span>
+                  We&apos;re always excited to collaborate on innovative projects and discuss <span className="font-semibold bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent underline decoration-red-500 decoration-2 underline-offset-2 dark:bg-gradient-to-r dark:from-red-400 dark:via-red-500 dark:to-red-600">mathematical research opportunities.</span>
                 </p>
               </div>
 
@@ -267,10 +267,10 @@ export default function MagazineContactSection() {
                         </p>
                       </div>
                       <h4 className="text-xl md:text-2xl lg:text-3xl font-extralight tracking-[-0.02em] text-black dark:text-white mb-3 font-serif leading-tight">
-                        Stay Connected
+                        Stay Updated
                       </h4>
                       <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 leading-relaxed font-extralight tracking-wide">
-                        Get updates on research breakthroughs, events, and mathematical discoveries
+                        Subscribe to our newsletter for the latest updates
                       </p>
                     </div>
                     
