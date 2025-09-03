@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "MATLAB & Overleaf Club - VIT Bhopal University",
     description: "Official website of the MATLAB & Overleaf Club at VIT Bhopal University. Access exclusive resources, register for events, generate certificates, and explore interactive learning materials.",
-    url: "https://linpack-club.vercel.app", // Update with your actual domain
+    url: "https://linpack.app", // Update with your actual domain
     siteName: "MATLAB & Overleaf Club",
     images: [
       {
