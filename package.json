@@ -6,9 +6,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "next-dev": "next dev",
-    "dev": "concurrently \"pnpm run fastapi-dev\" \"next dev\"",
-    "fastapi-dev": "pip3 install -r requirements.txt && python -m uvicorn api.index:app --host 0.0.0.0 --port 8000 --reload"
+    "next-dev": "next dev -H 0.0.0.0 -p 5000 --turbo",
+    "dev": "concurrently \"npm run fastapi-dev\" \"npm run next-dev\"",
+    "fastapi-dev": "python -m uvicorn api.index:app --host localhost --port 8000 --reload"
   },
   "dependencies": {
     "@google-cloud/local-auth": "^3.0.1",

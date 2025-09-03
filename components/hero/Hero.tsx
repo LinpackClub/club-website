@@ -79,12 +79,12 @@ export default function Hero() {
       gsap.registerPlugin(ScrollTrigger);
     }
 
-    // Initialize Lenis smooth scroll
+    // Initialize Lenis smooth scroll with optimized settings for immediate response
     const lenis = new Lenis({
-      duration: 1.6,
+      duration: 1.0, // Reduced duration for more immediate response
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      // Add syncTouch to work better with ScrollTrigger
       syncTouch: true,
+      lerp: 0.1, // Add lerp for smoother animation
     });
     lenisRef.current = lenis;
 
@@ -93,7 +93,7 @@ export default function Hero() {
     
     // Tell ScrollTrigger to use Lenis as the scroller
     ScrollTrigger.scrollerProxy(document.documentElement, {
-      scrollTop: (value?: number) => {
+      scrollTop: function(value?: number) {
         if (arguments.length && value !== undefined) {
           lenis.scrollTo(value as number);
           return value as number;
@@ -113,15 +113,15 @@ export default function Hero() {
     }
     requestAnimationFrame(raf);
 
-    // Track scroll for effects
+    // Track scroll for effects with immediate detection
     lenis.on('scroll', (args: { scroll: number }) => {
-      if (args.scroll > 50 && !hasScrolled) {
+      if (args.scroll > 1 && !hasScrolled) { // Reduced threshold to 1 pixel
         setHasScrolled(true);
       }
     });
 
     // GSAP Timeline for entrance animations - with reduced initial delay for better UX
-    const tl = gsap.timeline({ delay: 0.1 }); // Reduced delay from 0.5 to 0.1
+    const tl = gsap.timeline({ delay: 0.05 }); // Further reduced delay
 
     // Set initial states
     gsap.set([badgeRef.current, mainTitleRef.current, subtitleRef.current, statsRef.current, ctaRef.current], {
@@ -143,91 +143,96 @@ export default function Hero() {
     tl.to(imageRef.current, {
       opacity: 1,
       scale: 1,
-      duration: 1.5, // Reduced from 2
+      duration: 1.0, // Reduced duration
       ease: "power3.out"
     })
     .to(overlayRef.current, {
       opacity: 1,
-      duration: 1, // Reduced from 1.5
+      duration: 0.6, // Reduced duration
       ease: "power2.out"
-    }, "-=1")
+    }, "-=0.8")
     .to(badgeRef.current, {
       opacity: 1,
       y: 0,
       clipPath: 'inset(0% 0 0 0)',
-      duration: 0.8, // Reduced from 1
+      duration: 0.5, // Reduced duration
       ease: "power3.out"
-    }, "-=0.7")
+    }, "-=0.5")
     .to(mainTitleRef.current, {
       opacity: 1,
       y: 0,
       clipPath: 'inset(0% 0 0 0)',
-      duration: 0.9, // Reduced from 1.2
+      duration: 0.6, // Reduced duration
       ease: "power3.out"
-    }, "-=0.6")
+    }, "-=0.4")
     .to(subtitleRef.current, {
       opacity: 1,
       y: 0,
       clipPath: 'inset(0% 0 0 0)',
-      duration: 0.8, // Reduced from 1
+      duration: 0.5, // Reduced duration
       ease: "power3.out"
-    }, "-=0.7")
+    }, "-=0.5")
     .to(statsRef.current, {
       opacity: 1,
       y: 0,
       clipPath: 'inset(0% 0 0 0)',
-      duration: 0.8, // Reduced from 1
+      duration: 0.5, // Reduced duration
       ease: "power3.out"
-    }, "-=0.6")
+    }, "-=0.4")
     .to(ctaRef.current, {
       opacity: 1,
       y: 0,
       clipPath: 'inset(0% 0 0 0)',
-      duration: 0.8, // Reduced from 1
+      duration: 0.5, // Reduced duration
       ease: "power3.out"
-    }, "-=0.6");
+    }, "-=0.4");
 
     // Scroll-triggered zoom effect for magazine-style transition
-    // Add a small delay to ensure DOM is ready
-    setTimeout(() => {
-      if (heroRef.current) {
-        scrollTriggerRef.current = ScrollTrigger.create({
-          trigger: heroRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: 1.5,
-          // Use document.scrollingElement for proper Lenis integration
-          scroller: document.documentElement,
-          onUpdate: (self) => {
-            if (!imageRef.current || !mainTitleRef.current || !subtitleRef.current || 
-                !badgeRef.current || !statsRef.current || !ctaRef.current) return;
-                
-            const progress = self.progress;
-            const scale = 1 + (progress * 0.8); // Zoom from 1 to 1.8x
-            const brightness = 1 - (progress * 0.3); // Darken as it zooms
-            
-            gsap.set(imageRef.current, {
-              scale: scale,
-              filter: `brightness(${brightness})`
-            });
-            
-            // Parallax text movement
-            gsap.set([mainTitleRef.current, subtitleRef.current], {
-              y: -progress * 100,
-              opacity: 1 - (progress * 1.2)
-            });
-            
-            gsap.set([badgeRef.current, statsRef.current, ctaRef.current], {
-              y: -progress * 60,
-              opacity: 1 - (progress * 1.5)
-            });
-          }
-        });
-        
-        // Refresh ScrollTrigger after creation
-        ScrollTrigger.refresh();
+    // Create scroll trigger immediately without timeout for more consistent behavior
+    if (heroRef.current) {
+      // Kill any existing scroll trigger
+      if (scrollTriggerRef.current) {
+        scrollTriggerRef.current.kill();
       }
-    }, 100); // Small delay to ensure DOM elements are ready
+      
+      // Create new scroll trigger with optimized settings
+      scrollTriggerRef.current = ScrollTrigger.create({
+        trigger: heroRef.current,
+        start: "top top",
+        end: "bottom top",
+        scrub: 0.5, // Reduced scrub for more immediate response
+        invalidateOnRefresh: true, // Ensure proper refresh on resize
+        // Use document.scrollingElement for proper Lenis integration
+        scroller: document.documentElement,
+        onUpdate: (self) => {
+          if (!imageRef.current || !mainTitleRef.current || !subtitleRef.current || 
+              !badgeRef.current || !statsRef.current || !ctaRef.current) return;
+              
+          const progress = self.progress;
+          const scale = 1 + (progress * 0.4); // Reduced zoom effect for smoother feel
+          const brightness = 1 - (progress * 0.15); // Reduced darkening effect
+          
+          gsap.set(imageRef.current, {
+            scale: scale,
+            filter: `brightness(${brightness})`
+          });
+          
+          // Parallax text movement with reduced effect for smoother feel
+          gsap.set([mainTitleRef.current, subtitleRef.current], {
+            y: -progress * 30, // Reduced parallax effect
+            opacity: 1 - (progress * 0.8) // Reduced opacity fade
+          });
+          
+          gsap.set([badgeRef.current, statsRef.current, ctaRef.current], {
+            y: -progress * 20, // Reduced parallax effect
+            opacity: 1 - (progress * 1.0) // Reduced opacity fade
+          });
+        }
+      });
+    }
+
+    // Refresh ScrollTrigger after creation
+    ScrollTrigger.refresh();
 
     // Image rotation effect - start only after initial animation completes
     setTimeout(() => {
@@ -237,7 +242,7 @@ export default function Hero() {
       imageTimerRef.current = setInterval(() => {
         setCurrentImage((prev) => (prev + 1) % images.length);
       }, 6000);
-    }, 2000); // Start rotation after 2 seconds
+    }, 1500); // Reduced delay
 
   }, [isClient, hasScrolled, images.length]);
 
@@ -248,13 +253,6 @@ export default function Hero() {
       requestAnimationFrame(() => {
         initializeAnimations();
       });
-    }
-    
-    // Refresh ScrollTrigger when component mounts
-    if (isClient) {
-      setTimeout(() => {
-        ScrollTrigger.refresh();
-      }, 500);
     }
   }, [isClient, initializeAnimations]);
 

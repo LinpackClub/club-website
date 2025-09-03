@@ -15,69 +15,54 @@ export default function StairsWrapper({ children, backgroundColor }: StairsWrapp
   const searchParams = useSearchParams();
   const { isTransitioning, startTransition, endTransition } = useStairs();
   const [displayChildren, setDisplayChildren] = useState(children);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   // Create a string representation of the current route
   const currentRoute = `${pathname}?${searchParams?.toString() || ''}`;
 
   useEffect(() => {
-    // Check if this is a page refresh by looking at sessionStorage
-    let prevRoute: string | null = null;
-    let isPageRefresh = false;
-    
     if (typeof window !== 'undefined') {
       try {
-        prevRoute = sessionStorage.getItem('lastRoute');
-        isPageRefresh = sessionStorage.getItem('isPageRefresh') === 'true';
+        const prevRoute = sessionStorage.getItem('lastRoute');
+        const hasInitialized = sessionStorage.getItem('stairsInitialized') === 'true';
         
-        // Save current route to sessionStorage
-        sessionStorage.setItem('lastRoute', currentRoute);
-        sessionStorage.setItem('isPageRefresh', 'true');
-      } catch (e) {
-        // Ignore errors in sessionStorage
-      }
-    }
-    
-    // Trigger transition if:
-    // 1. The route actually changed (navigation between pages), or
-    // 2. This is a page refresh and we want to show the transition
-    if ((prevRoute !== null && currentRoute !== prevRoute) || isPageRefresh) {
-      // Start transition
-      startTransition();
-      
-      // Update children after a delay to allow transition to complete
-      const timer = setTimeout(() => {
-        setDisplayChildren(children);
-        endTransition();
-      }, 600); // This should match the duration of your stairs animation
-      
-      // Reset the page refresh flag after a short delay
-      const resetTimer = setTimeout(() => {
-        if (typeof window !== 'undefined') {
-          try {
-            sessionStorage.setItem('isPageRefresh', 'false');
-          } catch (e) {
-            // Ignore errors in sessionStorage
-          }
-        }
-      }, 100);
-      
-      return () => {
-        clearTimeout(timer);
-        clearTimeout(resetTimer);
-      };
-    } else {
-      // If this is the very first load, just update the children
-      setDisplayChildren(children);
-      
-      // Set the initial route in sessionStorage
-      if (typeof window !== 'undefined' && prevRoute === null) {
-        try {
+        // Check if this is a real route change (not initial load)
+        const isRealRouteChange = hasInitialized && prevRoute !== null && currentRoute !== prevRoute;
+        
+        if (isRealRouteChange) {
+          // Start transition for real navigation
+          startTransition();
+          
+          // Update children after a delay to allow transition to complete
+          const timer = setTimeout(() => {
+            setDisplayChildren(children);
+            endTransition();
+          }, 600);
+          
+          // Save the new route
           sessionStorage.setItem('lastRoute', currentRoute);
-          sessionStorage.setItem('isPageRefresh', 'false');
-        } catch (e) {
-          // Ignore errors in sessionStorage
+          
+          return () => {
+            clearTimeout(timer);
+          };
+        } else {
+          // For initial load or first visit, just update children without transition
+          setDisplayChildren(children);
+          setIsInitialLoad(false);
+          
+          // Mark as initialized and save the route
+          sessionStorage.setItem('lastRoute', currentRoute);
+          sessionStorage.setItem('stairsInitialized', 'true');
         }
+      } catch (e) {
+        // Fallback if sessionStorage fails
+        setDisplayChildren(children);
+        setIsInitialLoad(false);
       }
+    } else {
+      // Server-side rendering fallback
+      setDisplayChildren(children);
+      setIsInitialLoad(false);
     }
   }, [currentRoute, children, startTransition, endTransition]);
 

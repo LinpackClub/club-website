@@ -21,8 +21,10 @@ FONT_PATH = os.path.join(BASE_DIR, "assets", "arial.ttf")
 # Initialize FastAPI app and middleware
 app = FastAPI()
 origins = [
-    "http://localhost:3000",  # Allow frontend to access API on this URL
+    "http://localhost:5000",  # Allow frontend to access API on this URL
+    "http://localhost:3000", 
     "http://localhost",
+    "https://9dd40b88-57a7-46f9-8f68-95fb2a0ec568-00-1ctfh532jzq7c.sisko.replit.dev",  # Replit domain
     "https://linpack.vercel.app",  # For localhost access
     "https://linpack.vercel.app"  # Add your Vercel domain
 ]

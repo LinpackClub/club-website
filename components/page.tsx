@@ -2,10 +2,15 @@
 import { Menu, X } from 'lucide-react';
 import Image from 'next/image'
 import Link from 'next/link';
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   return (
     <nav className='bg-[#36BA98] shadow-lg h-[10vh]'>
@@ -29,7 +34,7 @@ export default function Navbar() {
 
         <div className='md:hidden flex items-center'>
           <button className='outline-none mobile-menu-button' onClick={() => setIsOpen(!isOpen)}>
-            {isOpen ? (
+            {isMounted && isOpen ? (
               <X className='w-6 h-6 text-gray-700' />
             ) : (
               <Menu className='w-6 h-6 text-gray-700' />
@@ -39,7 +44,7 @@ export default function Navbar() {
       </div>
     </div>
 
-    {isOpen && (
+    {isMounted && isOpen && (
       <div className='md:hidden'>
         <a href='/' className='block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200'>Home</a>
         <a href='/about' className='block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200'>About</a>
