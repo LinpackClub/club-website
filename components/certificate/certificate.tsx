@@ -181,6 +181,7 @@ export default function CertificateForm() {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const [regNo, setRegNo] = useState("");
   const [foundName, setFoundName] = useState("");
+  const [foundTeamName, setFoundTeamName] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
@@ -308,6 +309,7 @@ export default function CertificateForm() {
     }
     setError("");
     setFoundName("");
+    setFoundTeamName("");
     setIsSearching(true);
 
     try {
@@ -322,12 +324,14 @@ export default function CertificateForm() {
 
       const data = await response.json();
       setFoundName(data.name);
+      setFoundTeamName(data.team_name || "");
       setStatus("Participant found! Configure position and generate certificate.");
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to search participant"
       );
       setFoundName("");
+      setFoundTeamName("");
     } finally {
       setIsSearching(false);
     }
@@ -371,6 +375,7 @@ export default function CertificateForm() {
       setShowConfirmation(true);
       setRegNo("");
       setFoundName("");
+      setFoundTeamName("");
       // Confirmation modal will auto-close after 3 seconds
       setTimeout(() => {
         setShowConfirmation(false);
@@ -733,6 +738,9 @@ export default function CertificateForm() {
                   <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4">
                     <p className="text-sm text-green-600 dark:text-green-400">Found Participant</p>
                     <p className="text-lg font-semibold text-green-900 dark:text-green-100">{foundName}</p>
+                    {foundTeamName && (
+                      <p className="text-sm mt-1 text-green-800 dark:text-green-200">Team: {foundTeamName}</p>
+                    )}
                   </div>
                 )}
 

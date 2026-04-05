@@ -24,10 +24,10 @@ CERTIFICATE_DATA_FILE = os.path.join(BASE_DIR, "assets", "data2.json")
 TICKET_DATA_FILE = os.path.join(BASE_DIR, "assets", "data-tickets.json")
 TEMPLATE_PATH = os.path.join(BASE_DIR, "assets", "event.png")
 EVENT_TICKET_TEMPLATE_PATH = os.path.join(BASE_DIR, "assets", "event-ticket.png")
-CERTIFICATE_TEMPLATE_PATH = os.path.join(BASE_DIR, "assets", "vitb-got-latent", "certificate.png")
-FONT_PATH = os.path.join(BASE_DIR, "assets", "vitb-got-latent", "playlist.otf")
+CERTIFICATE_TEMPLATE_PATH = os.path.join(BASE_DIR, "assets", "hackmatrix", "certificate.png")
+FONT_PATH = os.path.join(BASE_DIR, "assets", "hackmatrix", "para-regular.ttf")
 PUBLIC_SANS_FONT_PATH = os.path.join(BASE_DIR, "assets", "PublicSans-Bold.ttf")
-CSV_DATA_PATH = os.path.join(BASE_DIR, "assets", "vitb-got-latent", "data.csv")
+CSV_DATA_PATH = os.path.join(BASE_DIR, "assets", "hackmatrix", "data.csv")
 
 # Google Sheets Configuration from Environment Variables
 # Load service account credentials from environment variable
@@ -78,16 +78,23 @@ TICKET_CONFIG = {
 # Configurable positioning for certificate generation (adjust these values as needed)
 CERTIFICATE_CONFIG = {
     "name": {
-        "x": 350,  # Adjust X position
-        "y": 830,  # Adjust Y position
-        "size": 140,  # Font size
-        "color": "Red",
+        "x": 1020,  # Adjust X position
+        "y": 430,  # Adjust Y position
+        "size": 100,  # Font size
+        "color": "#03989e",
+        "align": "center"  # Text alignment: "left", "center", "right"
+    },
+    "team_name": {
+        "x": 1000,  # Adjust X position
+        "y": 670,  # Adjust Y position
+        "size": 80,  # Font size
+        "color": "#000000",
         "align": "center"  # Text alignment: "left", "center", "right"
     }
 }
 
 def load_vitb_csv_data():
-    """Load participant data from VITB Got Latent CSV file"""
+    """Load participant data from HackMatrix CSV file"""
     participants = []
     try:
         with open(CSV_DATA_PATH, 'r', encoding='utf-8') as file:
@@ -397,7 +404,7 @@ async def generate_ticket(name: str = Form(...), reg_no: str = Form(...)):
 
 @app.get("/api/py/search-participant")
 async def search_participant(reg_number: str):
-    """Search for participant by registration number in VITB Got Latent CSV"""
+    """Search for participant by registration number in HackMatrix CSV"""
     print(f"Searching for registration number: {reg_number}")
     
     participant = search_participant_by_reg_no(reg_number)
@@ -410,6 +417,7 @@ async def search_participant(reg_number: str):
     
     return {
         "name": participant.get('Name', ''),
+        "team_name": participant.get('Team_Name', ''),
         "reg_number": participant.get('Reg_No', ''),
         "found": True
     }
@@ -419,7 +427,10 @@ async def generate_certificate(
     reg_number: str = Form(...),
     x: int = Form(None),
     y: int = Form(None),
-    font_size: int = Form(None)
+    font_size: int = Form(None),
+    team_x: int = Form(None),
+    team_y: int = Form(None),
+    team_font_size: int = Form(None)
 ):
     """Generate certificate with name printed on it using configurable position and font size"""
     print(f"Generating certificate for registration number: {reg_number}")
@@ -434,8 +445,10 @@ async def generate_certificate(
             detail="Participant not found"
         )
     
-    stored_name = participant.get('Name', '')
+    stored_name = participant.get('Name', '').strip()
+    stored_team_name = participant.get('Team_Name', '').strip()
     print(f"Using stored name: {stored_name}")
+    print(f"Using stored team name: {stored_team_name}")
     
     if not os.path.exists(CERTIFICATE_TEMPLATE_PATH):
         raise FileNotFoundError("Error: certificate template not found!")
@@ -443,36 +456,51 @@ async def generate_certificate(
     certificate = Image.open(CERTIFICATE_TEMPLATE_PATH)
     print("Certificate template loaded!")
     
-    # Use configurable position and font size, allowing overrides
-    config = CERTIFICATE_CONFIG["name"]
-    name_x = x if x is not None else config["x"]
-    name_y = y if y is not None else config["y"]
-    size = font_size if font_size is not None else config["size"]
-    color = config["color"]
-    alignment = config.get("align", "left")  # Get alignment, default to left
+    # Use configurable positions and font sizes, allowing overrides
+    name_config = CERTIFICATE_CONFIG["name"]
+    team_config = CERTIFICATE_CONFIG["team_name"]
+
+    name_x = x if x is not None else name_config["x"]
+    name_y = y if y is not None else name_config["y"]
+    name_size = font_size if font_size is not None else name_config["size"]
+    name_color = name_config["color"]
+    name_alignment = name_config.get("align", "left")
+
+    resolved_team_x = team_x if team_x is not None else team_config["x"]
+    resolved_team_y = team_y if team_y is not None else team_config["y"]
+    resolved_team_size = team_font_size if team_font_size is not None else team_config["size"]
+    team_color = team_config["color"]
+    team_alignment = team_config.get("align", "left")
     
     draw = ImageDraw.Draw(certificate)
     try:
-        font = ImageFont.truetype(FONT_PATH, size)
+        name_font = ImageFont.truetype(FONT_PATH, name_size)
+        team_font = ImageFont.truetype(FONT_PATH, resolved_team_size)
     except IOError:
         print("Warning: Font not found! Using default font.")
-        font = ImageFont.load_default()
+        name_font = ImageFont.load_default()
+        team_font = ImageFont.load_default()
     print("Font loaded!")
-    
-    # Calculate centered position if alignment is center
-    if alignment == "center":
-        # Get image width
-        img_width = certificate.width
-        # Calculate text width using textbbox
-        bbox = draw.textbbox((0, 0), stored_name, font=font)
-        text_width = bbox[2] - bbox[0]
-        # Center the text horizontally
-        name_x = (img_width - text_width) // 2
-        print(f"Text centered: image_width={img_width}, text_width={text_width}, final_x={name_x}")
-    
-    # Draw name at configured position
-    draw.text((name_x, name_y), stored_name, font=font, fill=color)
-    print(f"Name drawn at position ({name_x}, {name_y}) with font size {size}!")
+
+    def resolve_x(base_x, text_value, font_obj, align):
+        if align == "center":
+            bbox = draw.textbbox((0, 0), text_value, font=font_obj)
+            text_width = bbox[2] - bbox[0]
+            return base_x - (text_width // 2)
+        if align == "right":
+            bbox = draw.textbbox((0, 0), text_value, font=font_obj)
+            text_width = bbox[2] - bbox[0]
+            return base_x - text_width
+        return base_x
+
+    final_name_x = resolve_x(name_x, stored_name, name_font, name_alignment)
+    final_team_x = resolve_x(resolved_team_x, stored_team_name, team_font, team_alignment)
+
+    # Draw name and team name
+    draw.text((final_name_x, name_y), stored_name, font=name_font, fill=name_color)
+    draw.text((final_team_x, resolved_team_y), stored_team_name, font=team_font, fill=team_color)
+    print(f"Name drawn at ({final_name_x}, {name_y}) with color {name_color}")
+    print(f"Team name drawn at ({final_team_x}, {resolved_team_y}) with color {team_color}")
     
     # Generate certificate in memory only
     img_byte_arr = BytesIO()
