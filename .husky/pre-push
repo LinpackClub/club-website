@@ -1,1 +1,2 @@
-npm run build
+echo "🚀 Pushing changes! The full build will be verified by GitHub Actions CI."
+echo "If you want to test the build locally, run 'npm run build'."
