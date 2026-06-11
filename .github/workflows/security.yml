@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: 'lts/*'
       - name: Run npm audit
-        run: npm audit --audit-level=high
+        run: npm audit
 
   codeql:
     name: CodeQL
