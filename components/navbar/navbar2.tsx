@@ -35,12 +35,12 @@ const Navbar2: React.FC = () => {
   useGSAP(() => {
     // Set initial states
     if (navRef.current) {
-      gsap.set(navRef.current, { x: '100%', display: 'none' });
+      gsap.set(navRef.current, { x: "100%", display: "none" });
     }
-    
+
     const allLinks = gsap.utils.toArray(linksRef.current);
     const contactElement = contactRef.current;
-    
+
     if (allLinks.length > 0 || contactElement) {
       gsap.set([allLinks, contactElement].filter(Boolean), {
         autoAlpha: 0,
@@ -52,7 +52,7 @@ const Navbar2: React.FC = () => {
     tl.current = gsap
       .timeline({ paused: true })
       .to(navRef.current, {
-        display: 'flex',
+        display: "flex",
         x: 0,
         duration: 1,
         ease: "power3.out",
@@ -66,7 +66,7 @@ const Navbar2: React.FC = () => {
           ease: "power2.out",
           stagger: 0.1,
         },
-        "<+0.6"
+        "<+0.6",
       )
       .to(
         contactElement,
@@ -76,7 +76,7 @@ const Navbar2: React.FC = () => {
           duration: 0.5,
           ease: "power2.out",
         },
-        "<+0.6"
+        "<+0.6",
       );
 
     // Hamburger icon animation
@@ -99,7 +99,7 @@ const Navbar2: React.FC = () => {
             duration: 0.8,
             ease: "power2.out",
           },
-          "<"
+          "<",
         );
     }
   }, []);
@@ -109,7 +109,7 @@ const Navbar2: React.FC = () => {
       if (tl.current) {
         tl.current.reverse().then(() => {
           if (navRef.current) {
-            gsap.set(navRef.current, { display: 'none' });
+            gsap.set(navRef.current, { display: "none" });
           }
         });
       }
@@ -118,7 +118,7 @@ const Navbar2: React.FC = () => {
       }
     } else {
       if (navRef.current) {
-        gsap.set(navRef.current, { display: 'flex' });
+        gsap.set(navRef.current, { display: "flex" });
       }
       if (tl.current) {
         tl.current.play();
@@ -141,37 +141,47 @@ const Navbar2: React.FC = () => {
   };
 
   // Add scroll handler function
-  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, href: string) => {
-    if (href.startsWith('/#')) {
+  const handleScroll = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    href: string,
+  ) => {
+    if (href.startsWith("/#")) {
       e.preventDefault();
-      
+
       // Special handling for home button
-      if (href === '/#home') {
+      if (href === "/#home") {
         // Check if we're on a different page
-        if (window.location.pathname !== '/') {
+        if (window.location.pathname !== "/") {
           // Navigate to home page
-          window.location.href = '/';
+          window.location.href = "/";
         } else {
           // If on same page, just scroll to top
           window.scrollTo({
             top: 0,
-            behavior: 'smooth'
+            behavior: "smooth",
           });
         }
       } else {
         // Original behavior for other sections
         const element = document.querySelector(href.substring(1));
         if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
+          element.scrollIntoView({ behavior: "smooth" });
         }
       }
       setIsOpen(false); // Close mobile menu if open
     }
   };
 
-  const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, href: string) => {
+  const handleNavigation = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    href: string,
+  ) => {
     // For internal navigation, let StairsWrapper handle the transition
-    if (href.startsWith('/') && !href.startsWith('/#') && !href.startsWith('http')) {
+    if (
+      href.startsWith("/") &&
+      !href.startsWith("/#") &&
+      !href.startsWith("http")
+    ) {
       // Don't prevent default or manually trigger transition
       // Just let the normal navigation happen
       // The StairsWrapper will detect the route change and handle the transition
@@ -182,23 +192,38 @@ const Navbar2: React.FC = () => {
     }
   };
 
-  const navItems = [
+  const IS_EVENT_OPEN = false; // Hardcoded configuration for event status
+
+  const navItems: {
+    name: string;
+    href?: string;
+    disabled?: boolean;
+    subItems?: { name: string; href: string }[];
+  }[] = [
     { name: "Home", href: "/#home" },
-    { name: "Leaderboard", href: "https://leaderboard-peach-seven.vercel.app/" },
-    /*{ name: "Expense", href: "https://linpack-expense-tracker.vercel.app/" },*/
-    // { name: "About Us", href: "/#aboutus" },
-    { name: "Certificate", href: "/certificate" },
-    { name: "Ticket", href: "/ticket" },
-    { name: "Gallery", href: "/gallery" },
+    { name: "Event Gallery", href: "/gallery" },
+    { name: "Our Team", href: "/our-team" },
+    {
+      name: "Event Resources",
+      disabled: !IS_EVENT_OPEN,
+      subItems: [
+        {
+          name: "Leaderboard",
+          href: "https://leaderboard-peach-seven.vercel.app/",
+        },
+        { name: "Certificate", href: "/certificate" },
+        { name: "Ticket", href: "/ticket" },
+      ],
+    },
   ];
 
   // Use same nav items for desktop (include Expense)
   const desktopNavItems = navItems;
-  
+
   const getItemStyle = (itemName: string) => {
     return "hover:text-yellow-500 transition-all duration-300 ease-in-out bg-transparent shadow-none font-extralight tracking-wide bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 dark:from-white dark:via-gray-200 dark:to-white bg-clip-text text-transparent drop-shadow-sm";
   };
-  
+
   return (
     <>
       <nav
@@ -206,13 +231,15 @@ const Navbar2: React.FC = () => {
           bg-white/80 dark:bg-gray-900/60 shadow-2xl rounded-full px-4 py-2
           flex items-center justify-between
           border border-gray-200/40 dark:border-gray-700/30 backdrop-blur-xl
-          ${isNavbarHovered 
-            ? 'w-[99vw] max-w-7xl md:w-[92vw] md:max-w-7xl' 
-            : 'w-[97vw] max-w-6xl md:w-[88vw] md:max-w-6xl'
+          ${
+            isNavbarHovered
+              ? "w-[99vw] max-w-7xl md:w-[92vw] md:max-w-7xl"
+              : "w-[97vw] max-w-6xl md:w-[88vw] md:max-w-6xl"
           }
         `}
-        style={{ 
-          transition: 'width 0.5s cubic-bezier(0.4, 0.2, 0.2, 1), max-width 0.5s cubic-bezier(0.4, 0.2, 0.2, 1), box-shadow 0.3s ease'
+        style={{
+          transition:
+            "width 0.5s cubic-bezier(0.4, 0.2, 0.2, 1), max-width 0.5s cubic-bezier(0.4, 0.2, 0.2, 1), box-shadow 0.3s ease",
         }}
         onMouseEnter={() => {
           setIsLinksHovered(true);
@@ -241,7 +268,10 @@ const Navbar2: React.FC = () => {
           </Link>
         </div>
         {/* Spacer to prevent hover glitch */}
-        <div className="hidden md:block" style={{ minWidth: 32, marginLeft: 16, marginRight: 16 }} />
+        <div
+          className="hidden md:block"
+          style={{ minWidth: 32, marginLeft: 16, marginRight: 16 }}
+        />
         {/* Desktop Menu */}
         <div
           className="hidden md:flex items-center transition-all duration-500 ease-out space-x-2 md:space-x-6 lg:space-x-10"
@@ -249,12 +279,62 @@ const Navbar2: React.FC = () => {
             minWidth: 350,
             maxWidth: isNavbarHovered ? 800 : 700,
             flex: 1,
-            justifyContent: 'center',
+            justifyContent: "center",
           }}
         >
           {desktopNavItems.map((item) => (
-            <div key={item.name} className="relative">
-              {item.href.startsWith('http') ? (
+            <div key={item.name} className="relative group">
+              {item.subItems ? (
+                <>
+                  <div
+                    className={`rounded-full flex items-center gap-1 text-sm font-semibold tracking-wider px-4 py-2.5 ${
+                      item.disabled
+                        ? "text-gray-400 dark:text-gray-600 cursor-not-allowed opacity-70"
+                        : `${getItemStyle(item.name)} hover:bg-gray-100/70 dark:hover:bg-gray-800/70 hover:scale-110 cursor-pointer text-gray-800 dark:text-gray-300`
+                    } transform transition-all duration-300`}
+                  >
+                    {item.name}
+                    <svg
+                      className={`w-4 h-4 transition-transform duration-300 ${!item.disabled ? "group-hover:rotate-180" : ""}`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+                  {!item.disabled && (
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border border-gray-200/50 dark:border-gray-700/50 rounded-2xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top scale-95 group-hover:scale-100 z-50 overflow-hidden flex flex-col py-2">
+                      {item.subItems.map((subItem) =>
+                        subItem.href.startsWith("http") ? (
+                          <a
+                            key={subItem.name}
+                            href={subItem.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors text-center"
+                          >
+                            {subItem.name}
+                          </a>
+                        ) : (
+                          <Link
+                            key={subItem.name}
+                            href={subItem.href}
+                            className="px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors text-center"
+                          >
+                            {subItem.name}
+                          </Link>
+                        ),
+                      )}
+                    </div>
+                  )}
+                </>
+              ) : item.href && item.href.startsWith("http") ? (
                 <a
                   href={item.href}
                   target="_blank"
@@ -263,26 +343,26 @@ const Navbar2: React.FC = () => {
                     hover:bg-gray-100/70 dark:hover:bg-gray-800/70 hover:scale-110 transform transition-all duration-300
                   `}
                   aria-label={item.name}
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: "pointer" }}
                 >
                   {item.name}
                 </a>
-              ) : (
-                <Link 
+              ) : item.href ? (
+                <Link
                   href={item.href}
                   onClick={(e) => {
-                    handleScroll(e, item.href);
-                    handleNavigation(e, item.href);
+                    handleScroll(e, item.href!);
+                    handleNavigation(e, item.href!);
                   }}
                   className={`rounded-full text-sm font-semibold tracking-wider text-gray-800 dark:text-gray-300 px-4 py-2.5 ${getItemStyle(item.name)}
                     hover:bg-gray-100/70 dark:hover:bg-gray-800/70 hover:scale-110 transform transition-all duration-300
                   `}
                   aria-label={item.name}
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: "pointer" }}
                 >
                   {item.name}
                 </Link>
-              )}
+              ) : null}
             </div>
           ))}
         </div>
@@ -328,7 +408,7 @@ const Navbar2: React.FC = () => {
       <nav
         ref={navRef}
         className="fixed top-0 right-0 z-[10000] flex flex-col justify-between w-full h-[100vh] px-5 sm:px-10 uppercase py-20 gap-y-10 max-w-md shadow-2xl border-l-2 border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200"
-        style={{ display: 'none' }}
+        style={{ display: "none" }}
       >
         {/* Close Button */}
         <button
@@ -353,7 +433,7 @@ const Navbar2: React.FC = () => {
 
         {/* Add margin top to avoid navbar overlap */}
         <div className="mt-20"></div>
-        
+
         <div className="flex flex-col text-3xl gap-y-2 md:text-4xl lg:text-5xl">
           {navItems.map((item, index) => {
             return (
@@ -365,7 +445,51 @@ const Navbar2: React.FC = () => {
                   }
                 }}
               >
-                {item.href.startsWith('http') ? (
+                {item.subItems ? (
+                  <div className="flex flex-col">
+                    <span
+                      className={`transition-all duration-300 ${item.disabled ? "text-gray-400 dark:text-gray-600" : "text-gray-800 dark:text-gray-200"}`}
+                    >
+                      {item.name}{" "}
+                      {item.disabled && (
+                        <span className="text-sm md:text-lg align-middle ml-2 opacity-50 uppercase tracking-widest">
+                          (Closed)
+                        </span>
+                      )}
+                    </span>
+                    {!item.disabled && (
+                      <div className="flex flex-col ml-6 mt-3 gap-y-3 text-xl md:text-2xl border-l-2 border-gray-200 dark:border-gray-700 pl-6">
+                        {item.subItems.map((subItem) =>
+                          subItem.href.startsWith("http") ? (
+                            <a
+                              key={subItem.name}
+                              className="transition-all duration-300 cursor-pointer hover:text-yellow-500 dark:hover:text-yellow-400"
+                              href={subItem.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={toggleMenu}
+                            >
+                              {subItem.name}
+                            </a>
+                          ) : (
+                            <Link
+                              key={subItem.name}
+                              className="transition-all duration-300 cursor-pointer hover:text-yellow-500 dark:hover:text-yellow-400"
+                              href={subItem.href}
+                              onClick={(e) => {
+                                handleScroll(e, subItem.href);
+                                handleNavigation(e, subItem.href);
+                                toggleMenu();
+                              }}
+                            >
+                              {subItem.name}
+                            </Link>
+                          ),
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ) : item.href && item.href.startsWith("http") ? (
                   <a
                     className="transition-all duration-300 cursor-pointer hover:text-yellow-500 dark:hover:text-yellow-400"
                     href={item.href}
@@ -375,19 +499,19 @@ const Navbar2: React.FC = () => {
                   >
                     {item.name}
                   </a>
-                ) : (
+                ) : item.href ? (
                   <Link
                     className="transition-all duration-300 cursor-pointer hover:text-yellow-500 dark:hover:text-yellow-400"
                     href={item.href}
                     onClick={(e) => {
-                      handleScroll(e, item.href);
-                      handleNavigation(e, item.href);
+                      handleScroll(e, item.href!);
+                      handleNavigation(e, item.href!);
                       toggleMenu();
                     }}
                   >
                     {item.name}
                   </Link>
-                )}
+                ) : null}
               </div>
             );
           })}
@@ -397,7 +521,9 @@ const Navbar2: React.FC = () => {
           className="flex flex-col flex-wrap justify-between gap-8 md:flex-row"
         >
           <div>
-            <p className="tracking-wider text-gray-500 dark:text-gray-400">Contact</p>
+            <p className="tracking-wider text-gray-500 dark:text-gray-400">
+              Contact
+            </p>
             <a
               className="tracking-widest text-sm lg:text-xl lowercase text-pretty cursor-pointer transition-all duration-300 hover:text-yellow-500 dark:hover:text-yellow-400"
               href="mailto:contact@matlablatex.club"
@@ -406,7 +532,9 @@ const Navbar2: React.FC = () => {
             </a>
           </div>
           <div>
-            <p className="tracking-wider text-gray-500 dark:text-gray-400">Social Media</p>
+            <p className="tracking-wider text-gray-500 dark:text-gray-400">
+              Social Media
+            </p>
             <div className="flex flex-col flex-wrap gap-x-4 md:flex-row">
               <a
                 href="https://github.com/matlab-latex-club"
