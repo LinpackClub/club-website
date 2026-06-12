@@ -1,12 +1,12 @@
-'use client';
+"use client";
 import Image from "next/image";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Lenis from '@studio-freight/lenis';
+import Lenis from "@studio-freight/lenis";
 
 // Register GSAP plugins
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
@@ -14,16 +14,16 @@ export default function Hero() {
   const images = [
     {
       src: "/images/hero-image.jpg",
-      position: "object-center"
+      position: "object-center",
     },
     {
-      src: "/images/hero-image-2.jpg", 
-      position: "object-center"
+      src: "/images/hero-image-2.jpg",
+      position: "object-center",
     },
     {
       src: "/images/hero-image-31.jpg",
-      position: "object-center"
-    }
+      position: "object-center",
+    },
   ];
 
   const [currentImage, setCurrentImage] = useState(0);
@@ -61,7 +61,7 @@ export default function Hero() {
         scrollTriggerRef.current.kill();
       }
       // Clean up all ScrollTriggers
-      ScrollTrigger.getAll().forEach(st => st.kill());
+      ScrollTrigger.getAll().forEach((st) => st.kill());
       // Clean up Lenis
       if (lenisRef.current) {
         lenisRef.current.destroy();
@@ -75,7 +75,7 @@ export default function Hero() {
     animationInitialized.current = true;
 
     // Ensure GSAP plugins are registered
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       gsap.registerPlugin(ScrollTrigger);
     }
 
@@ -89,11 +89,11 @@ export default function Hero() {
     lenisRef.current = lenis;
 
     // Sync ScrollTrigger with Lenis
-    lenis.on('scroll', ScrollTrigger.update);
-    
+    lenis.on("scroll", ScrollTrigger.update);
+
     // Tell ScrollTrigger to use Lenis as the scroller
     ScrollTrigger.scrollerProxy(document.documentElement, {
-      scrollTop: function(value?: number) {
+      scrollTop: function (value?: number) {
         if (arguments.length && value !== undefined) {
           lenis.scrollTo(value as number);
           return value as number;
@@ -101,9 +101,14 @@ export default function Hero() {
         return lenis.scroll;
       },
       getBoundingClientRect() {
-        return {top: 0, left: 0, width: window.innerWidth, height: window.innerHeight};
+        return {
+          top: 0,
+          left: 0,
+          width: window.innerWidth,
+          height: window.innerHeight,
+        };
       },
-      pinType: document.documentElement.style.transform ? "transform" : "fixed"
+      pinType: document.documentElement.style.transform ? "transform" : "fixed",
     });
 
     function raf(time: number) {
@@ -114,8 +119,9 @@ export default function Hero() {
     requestAnimationFrame(raf);
 
     // Track scroll for effects with immediate detection
-    lenis.on('scroll', (args: { scroll: number }) => {
-      if (args.scroll > 1 && !hasScrolled) { // Reduced threshold to 1 pixel
+    lenis.on("scroll", (args: { scroll: number }) => {
+      if (args.scroll > 1 && !hasScrolled) {
+        // Reduced threshold to 1 pixel
         setHasScrolled(true);
       }
     });
@@ -124,19 +130,28 @@ export default function Hero() {
     const tl = gsap.timeline({ delay: 0.05 }); // Further reduced delay
 
     // Set initial states
-    gsap.set([badgeRef.current, mainTitleRef.current, subtitleRef.current, statsRef.current, ctaRef.current], {
-      opacity: 0,
-      y: 80,
-      clipPath: 'inset(100% 0 0 0)'
-    });
+    gsap.set(
+      [
+        badgeRef.current,
+        mainTitleRef.current,
+        subtitleRef.current,
+        statsRef.current,
+        ctaRef.current,
+      ],
+      {
+        opacity: 0,
+        y: 80,
+        clipPath: "inset(100% 0 0 0)",
+      },
+    );
 
     gsap.set(imageRef.current, {
       scale: 1.4,
-      opacity: 0
+      opacity: 0,
     });
 
     gsap.set(overlayRef.current, {
-      opacity: 0
+      opacity: 0,
     });
 
     // Entrance animations with sophisticated stagger
@@ -144,48 +159,72 @@ export default function Hero() {
       opacity: 1,
       scale: 1,
       duration: 1.0, // Reduced duration
-      ease: "power3.out"
+      ease: "power3.out",
     })
-    .to(overlayRef.current, {
-      opacity: 1,
-      duration: 0.6, // Reduced duration
-      ease: "power2.out"
-    }, "-=0.8")
-    .to(badgeRef.current, {
-      opacity: 1,
-      y: 0,
-      clipPath: 'inset(0% 0 0 0)',
-      duration: 0.5, // Reduced duration
-      ease: "power3.out"
-    }, "-=0.5")
-    .to(mainTitleRef.current, {
-      opacity: 1,
-      y: 0,
-      clipPath: 'inset(0% 0 0 0)',
-      duration: 0.6, // Reduced duration
-      ease: "power3.out"
-    }, "-=0.4")
-    .to(subtitleRef.current, {
-      opacity: 1,
-      y: 0,
-      clipPath: 'inset(0% 0 0 0)',
-      duration: 0.5, // Reduced duration
-      ease: "power3.out"
-    }, "-=0.5")
-    .to(statsRef.current, {
-      opacity: 1,
-      y: 0,
-      clipPath: 'inset(0% 0 0 0)',
-      duration: 0.5, // Reduced duration
-      ease: "power3.out"
-    }, "-=0.4")
-    .to(ctaRef.current, {
-      opacity: 1,
-      y: 0,
-      clipPath: 'inset(0% 0 0 0)',
-      duration: 0.5, // Reduced duration
-      ease: "power3.out"
-    }, "-=0.4");
+      .to(
+        overlayRef.current,
+        {
+          opacity: 1,
+          duration: 0.6, // Reduced duration
+          ease: "power2.out",
+        },
+        "-=0.8",
+      )
+      .to(
+        badgeRef.current,
+        {
+          opacity: 1,
+          y: 0,
+          clipPath: "inset(0% 0 0 0)",
+          duration: 0.5, // Reduced duration
+          ease: "power3.out",
+        },
+        "-=0.5",
+      )
+      .to(
+        mainTitleRef.current,
+        {
+          opacity: 1,
+          y: 0,
+          clipPath: "inset(0% 0 0 0)",
+          duration: 0.6, // Reduced duration
+          ease: "power3.out",
+        },
+        "-=0.4",
+      )
+      .to(
+        subtitleRef.current,
+        {
+          opacity: 1,
+          y: 0,
+          clipPath: "inset(0% 0 0 0)",
+          duration: 0.5, // Reduced duration
+          ease: "power3.out",
+        },
+        "-=0.5",
+      )
+      .to(
+        statsRef.current,
+        {
+          opacity: 1,
+          y: 0,
+          clipPath: "inset(0% 0 0 0)",
+          duration: 0.5, // Reduced duration
+          ease: "power3.out",
+        },
+        "-=0.4",
+      )
+      .to(
+        ctaRef.current,
+        {
+          opacity: 1,
+          y: 0,
+          clipPath: "inset(0% 0 0 0)",
+          duration: 0.5, // Reduced duration
+          ease: "power3.out",
+        },
+        "-=0.4",
+      );
 
     // Scroll-triggered zoom effect for magazine-style transition
     // Create scroll trigger immediately without timeout for more consistent behavior
@@ -194,7 +233,7 @@ export default function Hero() {
       if (scrollTriggerRef.current) {
         scrollTriggerRef.current.kill();
       }
-      
+
       // Create new scroll trigger with optimized settings
       scrollTriggerRef.current = ScrollTrigger.create({
         trigger: heroRef.current,
@@ -205,29 +244,36 @@ export default function Hero() {
         // Use document.scrollingElement for proper Lenis integration
         scroller: document.documentElement,
         onUpdate: (self) => {
-          if (!imageRef.current || !mainTitleRef.current || !subtitleRef.current || 
-              !badgeRef.current || !statsRef.current || !ctaRef.current) return;
-              
+          if (
+            !imageRef.current ||
+            !mainTitleRef.current ||
+            !subtitleRef.current ||
+            !badgeRef.current ||
+            !statsRef.current ||
+            !ctaRef.current
+          )
+            return;
+
           const progress = self.progress;
-          const scale = 1 + (progress * 0.4); // Reduced zoom effect for smoother feel
-          const brightness = 1 - (progress * 0.15); // Reduced darkening effect
-          
+          const scale = 1 + progress * 0.4; // Reduced zoom effect for smoother feel
+          const brightness = 1 - progress * 0.15; // Reduced darkening effect
+
           gsap.set(imageRef.current, {
             scale: scale,
-            filter: `brightness(${brightness})`
+            filter: `brightness(${brightness})`,
           });
-          
+
           // Parallax text movement with reduced effect for smoother feel
           gsap.set([mainTitleRef.current, subtitleRef.current], {
             y: -progress * 30, // Reduced parallax effect
-            opacity: 1 - (progress * 0.8) // Reduced opacity fade
+            opacity: 1 - progress * 0.8, // Reduced opacity fade
           });
-          
+
           gsap.set([badgeRef.current, statsRef.current, ctaRef.current], {
             y: -progress * 20, // Reduced parallax effect
-            opacity: 1 - (progress * 1.0) // Reduced opacity fade
+            opacity: 1 - progress * 1.0, // Reduced opacity fade
           });
-        }
+        },
       });
     }
 
@@ -243,7 +289,6 @@ export default function Hero() {
         setCurrentImage((prev) => (prev + 1) % images.length);
       }, 6000);
     }, 1500); // Reduced delay
-
   }, [isClient, hasScrolled, images.length]);
 
   // Initialize animations when client is ready
@@ -259,24 +304,19 @@ export default function Hero() {
   // Prevent rendering until client-side is ready
   if (!isClient) {
     return (
-      <section 
-        className="relative h-screen w-full overflow-hidden bg-gray-50 dark:bg-gray-900 z-0"
-      >
+      <section className="relative h-screen w-full overflow-hidden bg-gray-50 dark:bg-gray-900 z-0">
         <div className="absolute inset-0 w-full h-full bg-gray-200 animate-pulse" />
       </section>
     );
   }
 
   return (
-    <section 
+    <section
       ref={heroRef}
       className="relative h-screen w-full overflow-hidden bg-gray-50 dark:bg-gray-900 z-0"
     >
       {/* Full-screen background image with zoom effect */}
-      <div 
-        ref={imageContainerRef}
-        className="absolute inset-0 w-full h-full"
-      >
+      <div ref={imageContainerRef} className="absolute inset-0 w-full h-full">
         {images.map((image, index) => (
           <div
             key={image.src}
@@ -284,7 +324,10 @@ export default function Hero() {
               currentImage === index ? "opacity-100" : "opacity-0"
             }`}
           >
-            <div ref={index === currentImage ? imageRef : null} className="w-full h-full">
+            <div
+              ref={index === currentImage ? imageRef : null}
+              className="w-full h-full relative"
+            >
               <Image
                 src={image.src}
                 alt={`Club showcase ${index + 1}`}
@@ -297,9 +340,9 @@ export default function Hero() {
             </div>
           </div>
         ))}
-        
+
         {/* Gradient overlay for text readability */}
-        <div 
+        <div
           ref={overlayRef}
           className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/60"
         />
@@ -307,7 +350,6 @@ export default function Hero() {
 
       {/* Magazine-style content overlay */}
       <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-6 md:px-12 py-8 md:py-16">
-        
         {/* Badge */}
         <div ref={badgeRef} className="mb-6 md:mb-8">
           <div className="inline-flex items-center space-x-3 bg-white/10 backdrop-blur-md rounded-full px-8 py-4 border border-white/20 shadow-2xl">
@@ -341,18 +383,30 @@ export default function Hero() {
         <div ref={statsRef} className="mb-10 md:mb-12">
           <div className="flex items-center justify-center space-x-8 md:space-x-16">
             <div className="text-center">
-              <div className="text-2xl md:text-3xl font-bold text-white">50+</div>
-              <div className="text-xs md:text-sm text-white/60 uppercase tracking-wider">Members</div>
+              <div className="text-2xl md:text-3xl font-bold text-white">
+                50+
+              </div>
+              <div className="text-xs md:text-sm text-white/60 uppercase tracking-wider">
+                Members
+              </div>
             </div>
             <div className="w-px h-12 bg-white/20" />
             <div className="text-center">
-              <div className="text-2xl md:text-3xl font-bold text-white">10+</div>
-              <div className="text-xs md:text-sm text-white/60 uppercase tracking-wider">Workshops</div>
+              <div className="text-2xl md:text-3xl font-bold text-white">
+                10+
+              </div>
+              <div className="text-xs md:text-sm text-white/60 uppercase tracking-wider">
+                Workshops
+              </div>
             </div>
             <div className="w-px h-12 bg-white/20" />
             <div className="text-center">
-              <div className="text-2xl md:text-3xl font-bold text-white">24/7</div>
-              <div className="text-xs md:text-sm text-white/60 uppercase tracking-wider">Support</div>
+              <div className="text-2xl md:text-3xl font-bold text-white">
+                24/7
+              </div>
+              <div className="text-xs md:text-sm text-white/60 uppercase tracking-wider">
+                Support
+              </div>
             </div>
           </div>
         </div>

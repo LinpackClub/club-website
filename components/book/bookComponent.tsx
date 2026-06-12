@@ -14,7 +14,7 @@ interface PageProps {
   number?: number;
 }
 
-type PageType = 'cover' | 'content' | 'backcover';
+type PageType = "cover" | "content" | "backcover";
 
 interface PageContent {
   type: PageType;
@@ -25,13 +25,15 @@ interface PageContent {
   description?: string; // Add the description property
 }
 
-const Page = React.forwardRef<HTMLDivElement, PageProps>(({ children, className = "", number }, ref) => (
-  <div className={`relative ${className} book-page`} ref={ref}>
-    {children}
-  </div>
-));
+const Page = React.forwardRef<HTMLDivElement, PageProps>(
+  ({ children, className = "", number }, ref) => (
+    <div className={`relative ${className} book-page`} ref={ref}>
+      {children}
+    </div>
+  ),
+);
 
-Page.displayName = 'Page';
+Page.displayName = "Page";
 
 export default function MyBook(props: MyBookProps) {
   const bookRef = useRef<any>(null);
@@ -41,9 +43,9 @@ export default function MyBook(props: MyBookProps) {
     const updateDimensions = () => {
       const width = window.innerWidth;
       const height = window.innerHeight;
-      
+
       let baseHeight, baseWidth, pageWidth;
-      
+
       if (width < 640) {
         baseHeight = Math.min(height * 0.4, 420);
         baseWidth = Math.floor(baseHeight * 0.65);
@@ -60,7 +62,7 @@ export default function MyBook(props: MyBookProps) {
 
       setDimensions({
         width: pageWidth * 2,
-        height: baseHeight
+        height: baseHeight,
       });
     };
 
@@ -84,107 +86,107 @@ export default function MyBook(props: MyBookProps) {
 
   const pages: PageContent[] = [
     {
-      type: 'cover',
-      title: 'Club Events',
-      subtitle: 'Explore our activities'
+      type: "cover",
+      title: "Club Events",
+      subtitle: "Explore our activities",
     },
     {
-      type: 'content',
+      type: "content",
       title: "Inaugral Event",
-items: [
-  "1. The Linpack Club hosted its inaugural event titled Embarking on the Basics of MATLAB: A Primer to Unlocking Its Potential.",
-  "2. Event Started with distribution of unique hashed event ticket through college mail id’s to registered student.",
-  "3. The event featured an engaging workshop on MATLAB, designed to provide participants with a comprehensive understanding of the software.",
-  "4. The workshop included hands-on sessions and quizzes to explore new technologies and enhance participants' skills.",
-  "5. Ended with Prize distribution and unique participation certification to all."
-],
+      items: [
+        "1. The Linpack Club hosted its inaugural event titled Embarking on the Basics of MATLAB: A Primer to Unlocking Its Potential.",
+        "2. Event Started with distribution of unique hashed event ticket through college mail id’s to registered student.",
+        "3. The event featured an engaging workshop on MATLAB, designed to provide participants with a comprehensive understanding of the software.",
+        "4. The workshop included hands-on sessions and quizzes to explore new technologies and enhance participants' skills.",
+        "5. Ended with Prize distribution and unique participation certification to all.",
+      ],
       image: "/images/hero-image-69.jpg",
     },
     {
-      type: 'content',
+      type: "content",
       title: "VIT GOT TALLENT -I",
-items: [
-  `Event has been started by providing Everyone with event unique has codes tickets through everyones mail ids.
+      items: [
+        `Event has been started by providing Everyone with event unique has codes tickets through everyones mail ids.
 On the day of event music system has been installed and all participants had been provided with event details.
 Blind Fold Race (Round 1) 
 Each team has one blindfolded member.
 The blindfolded member follows instructions from their partner to reach a destination, overcoming hurdles.
 The team that reaches the destination first wins. More instructions will be given by anchors.`,
 
-  `Pop the Balloons (Round 2):
+        `Pop the Balloons (Round 2):
 Teams of two members.
 One team member inflates balloons, while the other pops them by sitting on them.
 Scores are based on the number of balloons popped.`,
 
-  `Karaoke Battle (Round 3):
+        `Karaoke Battle (Round 3):
 Features Word Play, where teams sing spontaneously with a given word.
 Artist Impersonation: Solo challenge to perform a song by a randomly drawn artist.
 Guess the Song
 Any Task can be on your luck.`,
 
-  `Lip Sync Battle (Round 4):
+        `Lip Sync Battle (Round 4):
 Teams of two.
 One member wears noise-canceling headphones (can’t hear external sounds).
 The other member imitates a given movie name, dialogue (2-5 words), or actor/actress name through lip movements.
 Points awarded if the guesser gets it right. It will be appreciable if you guys bring your own. Else we will try to give to 10 competing team at a time.`,
 
-  `Face Painting (Round 5):
+        `Face Painting (Round 5):
 Teams of two.
 One member paints an attractive pattern on the other’s face.
 The most impressive and attractive look wins.
 Time limit for completion.
 Participants bring their own makeup/painting tools for safety.`,
-],
+      ],
       image: "/images/event2.jpg",
     },
     {
-      type: 'content',
+      type: "content",
       title: "MatlabVerse A NextWave Hackathon",
       items: [
         "The Linpack Club hosted a hackathon titled MATLABVerse: A NextWave Hackathon, which was open to all students.",
         "The event aimed to provide students with a platform to showcase their skills and creativity in MATLAB programming.",
         "Participants were required to submit their projects, which were evaluated by a panel of judges.",
         "The hackathon featured a range of projects, including image processing, data analysis, and machine learning applications.",
-        "The winners were awarded prizes and certificates for their outstanding projects."
+        "The winners were awarded prizes and certificates for their outstanding projects.",
       ],
       image: "/images/hero-image.jpg",
     },
     {
-      type: 'content',
+      type: "content",
       title: "Upcoming Events(VIT GOT TALLENT -II)",
       items: [
         "The Linpack Club is organizing a second edition of VIT GOT TALLENT, a talent show open to all students.",
         "The event will feature a range of competitions, including singing, dancing, acting, and more.",
         "Participants will have the opportunity to showcase their talents and compete for prizes and recognition.",
         "The event will be held on the VIT campus, with a panel of judges evaluating the performances.",
-        "The winners will be awarded prizes and certificates for their outstanding performances."
+        "The winners will be awarded prizes and certificates for their outstanding performances.",
       ],
       image: "/images/water.jpg",
     },
     {
-      type: 'backcover',
-      title: 'Thank You',
-      subtitle: 'For exploring our events'
-    }
+      type: "backcover",
+      title: "Thank You",
+      subtitle: "For exploring our events",
+    },
   ];
 
   const renderPage = (page: PageContent, index: number) => {
-    if (page.type === 'content') {
+    if (page.type === "content") {
       return (
-        <div className="h-full w-full relative">
+        <div className="absolute inset-0">
           {page.image && (
             <>
               <Image
                 src={page.image}
                 alt={page.title}
-                layout="fill"
-                objectFit="cover"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 priority
-                className="w-full h-full"
+                className="w-full h-full object-cover"
               />
               {/* Dark overlay with red tint */}
               <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-red-900/40"></div>
-              
+
               <div className="absolute inset-0 flex flex-col p-6 text-white z-10">
                 {/* Title with enhanced typography */}
                 <div className="mb-4">
@@ -198,7 +200,10 @@ Participants bring their own makeup/painting tools for safety.`,
                 {page.items && (
                   <ul className="space-y-4 text-sm sm:text-base overflow-y-auto pr-4 simple-scrollbar">
                     {page.items.map((item, idx) => (
-                      <li key={idx} className="text-white/90 font-light tracking-wide leading-relaxed pl-4 relative">
+                      <li
+                        key={idx}
+                        className="text-white/90 font-light tracking-wide leading-relaxed pl-4 relative"
+                      >
                         <div className="absolute left-0 top-2 w-2 h-2 bg-red-500 rounded-full opacity-75"></div>
                         {item}
                       </li>
@@ -224,22 +229,22 @@ Participants bring their own makeup/painting tools for safety.`,
         <div className="h-full flex flex-col justify-center items-center p-6 text-white relative">
           {/* Top decorative element */}
           <div className="absolute top-0 left-1/2 w-px h-20 bg-gradient-to-b from-white/0 via-white/30 to-white/0 transform -translate-x-1/2"></div>
-          
+
           {/* Title section with enhanced typography */}
           <div className="text-center space-y-6">
             <h1 className="text-4xl sm:text-5xl font-serif font-extralight text-white drop-shadow-lg tracking-[-0.03em]">
               {page.title}
             </h1>
-            
+
             <div className="w-32 h-0.5 mx-auto bg-gradient-to-r from-white/20 via-white/40 to-white/20"></div>
-            
+
             {page.subtitle && (
               <p className="text-lg text-white/90 font-serif font-light tracking-wide">
                 {page.subtitle}
               </p>
             )}
           </div>
-          
+
           {/* Bottom decorative element */}
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
             <div className="w-16 h-16 relative">
@@ -280,17 +285,17 @@ Participants bring their own makeup/painting tools for safety.`,
         showPageCorners={true}
         disableFlipByClick={false}
         style={{
-          position: 'relative',
+          position: "relative",
           width: dimensions.width,
           height: dimensions.height,
-          touchAction: 'none'
+          touchAction: "none",
         }}
       >
         {pages.map((page, index) => (
-          <Page 
+          <Page
             number={index}
             key={`page-${index}`}
-            className={`${page.type === 'content' ? 'page-content' : 'book-cover'} relative overflow-hidden ${page.type === 'backcover' ? 'back-cover' : ''}`}
+            className={`${page.type === "content" ? "page-content" : "book-cover"} relative overflow-hidden ${page.type === "backcover" ? "back-cover" : ""}`}
           >
             {renderPage(page, index)}
           </Page>

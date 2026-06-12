@@ -1,28 +1,26 @@
-import MagazineResearchSection from '@/components/research/MagazineResearchSection'
-import ChatComp from '@/components/chat/chatComp'
-import MagazineContactSection from '@/components/footer/MagazineContactSection'
-import Hero from '@/components/hero/Hero'
-import ImgeSlider from '@/components/carousel/ImgeSlider'
-import Section4 from '@/components/section/section4'
-import ProjectScroller from '@/components/scroller/ProjectScroller'
+import MagazineResearchSection from "@/components/research/MagazineResearchSection";
+import ChatComp from "@/components/chat/chatComp";
+import MagazineContactSection from "@/components/footer/MagazineContactSection";
+import Hero from "@/components/hero/Hero";
+import ImgeSlider from "@/components/carousel/ImgeSlider";
+import Section4 from "@/components/section/section4";
+import ProjectScroller from "@/components/scroller/ProjectScroller";
 // import InfiniteScroll from '@/components/infinite-scroll/InfiniteScroll' - Removed for now
-import { GoogleGeminiEffectDemo } from '@/components/ui/google-gemini-effect-demo'
-import EventPopup from '@/components/EventPopup'
-import React from 'react'
+import { GoogleGeminiEffectDemo } from "@/components/ui/google-gemini-effect-demo";
+import React from "react";
 
 export default function page() {
   return (
     <div>
-      <EventPopup />
-      <Hero/>
+      <Hero />
       {/* <InfiniteScroll /> - Removed for now */}
       <ImgeSlider />
       <GoogleGeminiEffectDemo />
       <ProjectScroller />
-      <Section4/>
+      <Section4 />
       <MagazineResearchSection />
-      <ChatComp/>
-      <MagazineContactSection/> 
+      <ChatComp />
+      <MagazineContactSection />
     </div>
-  )
+  );
 }
