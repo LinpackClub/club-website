@@ -22,7 +22,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@studio-freight/lenis": "^1.0.42",
     "@types/imagesloaded": "^4.1.7",
-    "@types/three": "^0.179.0",
+    "@types/three": "^0.184.1",
     "@vercel/kv": "^3.0.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
